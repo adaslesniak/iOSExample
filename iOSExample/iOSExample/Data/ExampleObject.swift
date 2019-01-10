@@ -25,6 +25,13 @@ class ExampleObject: CustomStringConvertible {
         image = imgAddress
     }
     
+    //that is just weird - there is no internal logic to task, so not sure how to deal with this
+    func getTitle(whenReady: @escaping (String) -> Void) {
+        Backend.getTitle(for: self) { title in
+            whenReady(title ?? "")
+        }
+    }
+    
     //custom string convertible protocol implementation
     var description: String {
         return "\(text) [at: \(image)]"

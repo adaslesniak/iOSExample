@@ -22,11 +22,34 @@ class Backend {
             for detail in answer {
                 if let deserialised = ExampleObject(serialised: detail) {
                     details.append(deserialised)
+                    getTitle(for: deserialised) { _ in }
                 } else {
                     print("ERROR: failed to deserialise detail: \(detail)")
                 }
             }
             whenDone(details)
+        }
+    }
+    
+    //FIXME: that naming exampleObject of type ExampleObject is blasphemy... but there is no sense which I could use for naming - it's just an example
+    static func getTitle(for exampleObject: ExampleObject, whenDone: @escaping (String?) -> Void) {
+        let request = unauthorizedJsonRequest("http://dev.tapptic.com/test/json.php?name=\(exampleObject.text)")
+        executeRequest(request, errorHandling: {
+            print("ERROR when requesting title for object")
+        }) { data, answer in
+            guard let data = data else {
+                throw Exception.error("no data in answer for getTitle")
+            }
+            print("got data: \(data)")
+            guard let answer = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String:Any] else {
+                throw Exception.error("couldn't read json title")
+            }
+            print("got answer: \(answer)")
+            guard let title = answer.valueAtPath("text") as? String else {
+                throw Exception.error("couldn't fine value for text key")
+            }
+            print("title is: \(title)")
+            whenDone(title)
         }
     }
     

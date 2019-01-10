@@ -58,6 +58,18 @@ class MainViewCtrl: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cellData = DataCtrl.news[indexPath.row] else {
+            print("ERROR: ....")
+            return
+        }
+        let detailCtrl = DetailViewCtrl.create(cellData)
+        present(detailCtrl, animated: true)
+        detailCtrl.view.addAction(.tap) {
+            detailCtrl.dismiss(animated: true)
+        }
+    }
 
 }
 

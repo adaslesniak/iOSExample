@@ -40,15 +40,12 @@ class Backend {
             guard let data = data else {
                 throw Exception.error("no data in answer for getTitle")
             }
-            print("got data: \(data)")
             guard let answer = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String:Any] else {
                 throw Exception.error("couldn't read json title")
             }
-            print("got answer: \(answer)")
             guard let title = answer.valueAtPath("text") as? String else {
                 throw Exception.error("couldn't fine value for text key")
             }
-            print("title is: \(title)")
             whenDone(title)
         }
     }

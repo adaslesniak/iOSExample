@@ -24,6 +24,8 @@
 		81A49F3D21E7BECE00E01F87 /* Dictionary+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A49F3C21E7BECE00E01F87 /* Dictionary+.swift */; };
 		81A49F4021E7E90300E01F87 /* DetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81A49F3F21E7E90300E01F87 /* DetailView.xib */; };
 		81A49F4221E7F0FE00E01F87 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A49F4121E7F0FE00E01F87 /* UIView+.swift */; };
+		81A49F4421E7F29100E01F87 /* UIDevice+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A49F4321E7F29100E01F87 /* UIDevice+.swift */; };
+		81A49F4621E7FDF200E01F87 /* ExampleObjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A49F4521E7FDF200E01F87 /* ExampleObjectCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		81A49F3C21E7BECE00E01F87 /* Dictionary+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+.swift"; sourceTree = "<group>"; };
 		81A49F3F21E7E90300E01F87 /* DetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailView.xib; sourceTree = "<group>"; };
 		81A49F4121E7F0FE00E01F87 /* UIView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
+		81A49F4321E7F29100E01F87 /* UIDevice+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+.swift"; sourceTree = "<group>"; };
+		81A49F4521E7FDF200E01F87 /* ExampleObjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleObjectCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +124,8 @@
 				81A49F3821E7A1D200E01F87 /* DetailViewCtrl.swift */,
 				81A49F1721E791EC00E01F87 /* MainViewCtrl.swift */,
 				81A49F3F21E7E90300E01F87 /* DetailView.xib */,
+				81A49F4321E7F29100E01F87 /* UIDevice+.swift */,
+				81A49F4521E7FDF200E01F87 /* ExampleObjectCell.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -199,8 +205,10 @@
 				81A49F3B21E7B65D00E01F87 /* ImageCache.swift in Sources */,
 				81A49F3521E7A03900E01F87 /* Typealiases.swift in Sources */,
 				81A49F2B21E796AA00E01F87 /* DataCtrl.swift in Sources */,
+				81A49F4621E7FDF200E01F87 /* ExampleObjectCell.swift in Sources */,
 				81A49F1821E791EC00E01F87 /* MainViewCtrl.swift in Sources */,
 				81A49F3121E799AC00E01F87 /* ExampleChannel.swift in Sources */,
+				81A49F4421E7F29100E01F87 /* UIDevice+.swift in Sources */,
 				81A49F3D21E7BECE00E01F87 /* Dictionary+.swift in Sources */,
 				81A49F1621E791EC00E01F87 /* AppDelegate.swift in Sources */,
 				81A49F1E21E791EC00E01F87 /* iOSExample.xcdatamodeld in Sources */,

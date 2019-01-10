@@ -3,18 +3,22 @@ import UIKit
 
 
 class MainViewCtrl: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    private let cellId = "newsTableViewCellId"
+    private var iSelectedRow: IndexPath! = nil
     
     @IBOutlet weak var newsTable: UITableView! //it's just random name, but naming things by their class name should be punishable and means that someone don't care what he writes and does it make sense
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        newsTable.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        newsTable.register(ExampleObjectCell.self, forCellReuseIdentifier: ExampleObjectCell.reusableId)
         newsTable.delegate = self
         newsTable.dataSource = self
         DataCtrl.news.registerForUpdates(self) { [weak self] in  //TODO: in real app this should be unregistred
             self?.newsTable.reloadData()
+            let iZero = IndexPath(row: 0, section: 0)
+            print("autoSelcting row: \(iZero.row)")
+            ExecuteOnMain(after: 0.1) { //that is HACK
+                self?.newsTable.selectRow(at: iZero, animated: false, scrollPosition: .none)
+            }
         }
         DataCtrl.news.update()
     }
@@ -27,7 +31,7 @@ class MainViewCtrl: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = newsTable.dequeueReusableCell(withIdentifier: cellId) else {
+        guard let cell = newsTable.dequeueReusableCell(withIdentifier: ExampleObjectCell.reusableId) else {
             fatalError("ehmm.... it is registred so should work")
         }
         guard let cellData = DataCtrl.news[indexPath.row] else {
@@ -56,13 +60,24 @@ class MainViewCtrl: UIViewController, UITableViewDelegate, UITableViewDataSource
                 height: cell.textLabel!.frame.height
             )
         }
+        cell.selectionStyle = .none
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ table: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("did select row: \(indexPath.row)")
         guard let cellData = DataCtrl.news[indexPath.row] else {
             print("ERROR: ....")
             return
+        }
+        defer {
+            iSelectedRow = indexPath
+        }
+        guard let oldSelection = iSelectedRow else {
+            return //first selction, no user triggered, don't open detail view
+        }
+        if oldSelection != indexPath {
+            table.deselectRow(at: oldSelection, animated: true)
         }
         let detailCtrl = DetailViewCtrl.create(cellData)
         present(detailCtrl, animated: true)

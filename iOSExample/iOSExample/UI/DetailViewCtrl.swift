@@ -33,8 +33,9 @@ class DetailViewCtrl: UIViewController {
         }
         label.text = data.text
         data.getTitle { [weak self] theTitle in
-            print("setting title: \(theTitle)")
-            self?.label.text = theTitle
+            ExecuteOnMain {
+                self?.label.text = theTitle
+            }
         }
     }
     

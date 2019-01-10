@@ -8,6 +8,7 @@ class ExampleObject: CustomStringConvertible {
     
     public private(set) var text: String
     public private(set) var image: URL
+    private var title: String? = nil
     
     //init with half deserialised json object
     //optional as we don't controll what comes from backend
@@ -27,7 +28,12 @@ class ExampleObject: CustomStringConvertible {
     
     //that is just weird - there is no internal logic to task, so not sure how to deal with this
     func getTitle(whenReady: @escaping (String) -> Void) {
-        Backend.getTitle(for: self) { title in
+        if let title = title {
+            whenReady(title)
+            return
+        }
+        Backend.getTitle(for: self) { [weak self] title in
+            self?.title = title
             whenReady(title ?? "")
         }
     }

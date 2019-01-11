@@ -7,32 +7,34 @@ class DetailViewCtrl: UIViewController {
     
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var label: UILabel!
-    private var data: ExampleObject!
+    public private(set) var data: ExampleObject?
     
     
-    public static func create(_ data: ExampleObject) -> DetailViewCtrl {
-        let ctrl = DetailViewCtrl(nibName: "DetailView", bundle: nil)
-        ctrl.data = data
-        ctrl.loadData()
-        return ctrl
+    //In my opinion knowledge about nibname should belong to viewCtrl and shouldn't be required outside
+    public static func create() -> DetailViewCtrl {
+        return DetailViewCtrl(nibName: "DetailView", bundle: nil)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        loadData()
-    }
-    
-    
-    //that is probably just my bad experience, but I am never sure about order of execution - viewDidLoad vs assigning ctrl.data = data in factory
-    private func loadData() {
-        if data == nil || label == nil || label.text == data.text {
-            return //was already loaded or there is no data yet or view is not yet loaded
+    func loadData(_ data: ExampleObject?) {
+        self.data = data
+        guard label != nil, imgView != nil else {
+            print("ERROR: how on earth?")
+            ExecuteOnMain(after: 0.3) { [weak self] in
+                self?.loadData(data)
+            }
+            return
         }
-        ImageCache.get(data.image) { [weak self] image in
+        
+        label.text = data?.text
+        guard let newData = data else {
+            imgView.image = nil
+            return
+        }
+        ImageCache.get(newData.image) { [weak self] image in
             self?.imgView.image = image
         }
-        label.text = data.text
-        data.getTitle { [weak self] theTitle in
+        label.text = newData.text
+        newData.getTitle { [weak self] theTitle in
             ExecuteOnMain {
                 self?.label.text = theTitle
             }

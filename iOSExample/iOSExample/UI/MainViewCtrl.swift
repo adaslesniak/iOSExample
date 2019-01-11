@@ -4,6 +4,8 @@ import UIKit
 
 class MainViewCtrl: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private var iSelectedRow: IndexPath! = nil
+    private var detailCtrl: DetailViewCtrl!
+    private var detailContainer: UIView! { return detailCtrl.view }
     
     @IBOutlet weak var newsTable: UITableView! //it's just random name, but naming things by their class name should be punishable and means that someone don't care what he writes and does it make sense
 
@@ -12,6 +14,18 @@ class MainViewCtrl: UIViewController, UITableViewDelegate, UITableViewDataSource
         newsTable.register(ExampleObjectCell.self, forCellReuseIdentifier: ExampleObjectCell.reusableId)
         newsTable.delegate = self
         newsTable.dataSource = self
+
+        detailCtrl = DetailViewCtrl.create()
+        addChild(detailCtrl)
+        view.addSubview(detailCtrl.view)
+        detailCtrl.view.frame = CGRect(x: view.frame.width, y: 0, width: 0, height: 0)
+        detailContainer.addAction(.tap) { [weak self] in
+            self?.detailCtrl.loadData(nil)
+            self?.updateDetailViewFrame()
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDetailViewFrame), name: UIDevice.orientationDidChangeNotification, object: nil)
+        
         DataCtrl.news.registerForUpdates(self) { [weak self] in  //TODO: in real app this should be unregistred
             self?.newsTable.reloadData()
             let iZero = IndexPath(row: 0, section: 0)
@@ -23,9 +37,12 @@ class MainViewCtrl: UIViewController, UITableViewDelegate, UITableViewDataSource
         DataCtrl.news.update()
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self) //better safe than sorry
+        DataCtrl.news.unregisterFromUpdates(self) //as above
+    }
     
-    // ======== TABLE DATA SOURCE ==========
-    //simple passing info from DataCtrl to tableView
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return DataCtrl.news.count
     }
@@ -79,10 +96,25 @@ class MainViewCtrl: UIViewController, UITableViewDelegate, UITableViewDataSource
         if oldSelection != indexPath {
             table.deselectRow(at: oldSelection, animated: true)
         }
-        let detailCtrl = DetailViewCtrl.create(cellData)
-        present(detailCtrl, animated: true)
-        detailCtrl.view.addAction(.tap) {
-            detailCtrl.dismiss(animated: true)
+        detailCtrl.loadData(cellData)
+        updateDetailViewFrame()
+    }
+    
+    private func detailFrame() -> CGRect {
+        if detailCtrl?.data == nil {
+            return CGRect(x: view.frame.width, y: 0, width: 0, height: 0) //hide to top right corner
+        } else if UIDevice.current.orientation.isLandscape {
+            return CGRect(x: view.frame.width/2, y: 0, width: view.frame.width/2, height: view.frame.height)
+        } else {
+            return CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        }
+    }
+    
+    //objc beacuase notification system is still ancient
+    @objc private func updateDetailViewFrame() {
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let self = self else { return }
+            self.detailContainer.frame = self.detailFrame()
         }
     }
 

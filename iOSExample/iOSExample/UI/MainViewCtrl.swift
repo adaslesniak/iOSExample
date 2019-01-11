@@ -9,6 +9,11 @@ class MainViewCtrl: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     @IBOutlet weak var newsTable: UITableView! //it's just random name, but naming things by their class name should be punishable and means that someone don't care what he writes and does it make sense
 
+    //because knowledge about what nibName belongs here
+    public static func instantiate() -> MainViewCtrl {
+        return MainViewCtrl(nibName: "MainView", bundle: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         newsTable.register(ExampleObjectCell.self, forCellReuseIdentifier: ExampleObjectCell.reusableId)
